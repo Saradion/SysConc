@@ -1,0 +1,41 @@
+TP1 Exclusion mutuelle et synchronisation élémentaire
+
+Mathias Bigaignon
+
+Exercice 1 Exclusion mutuelle
+
+1) La version complétée et corrigée de la classe Peterson.java est disponible sous le nom PetersonCorrected.java
+
+L'algorithme de Peterson est correctement implémenté dans Peterson.java et ne nécessite pas de correction particulière vis-à-vis du comportement attendu.
+Cependant, lorsque l'un des processus ne peut entrer en section critique, il n'est pas nécessaire qu'il exécute un boucle while vide dont il ne peut sortir. On fera donc attendre les processus sur un verrou explicite partagé et passé en paramètre du constructeur de la classe Proc.
+On n'oubliera pas de réveiller les threads ayant exécuté wait() sur ce verrou partagé lorsque un thread sort de la section critique.
+
+2) Non, l'ordre d'affectation n'est pas important. On pourra vérifier facilement qu'inverser cet ordre n'a aucune influence sur l'algorithme. 
+
+3) Le premier algorithme développé est implémenté dans NaiveAlgorithm.java et correspond à l'algorithme suivant :
+    - On dispose d'un booléen atomique isOccupied designant l'occupation de la SC par un thread
+    - On dispose d'un verrou partagé par tous les thread
+    - Lorsque qu'un thread requiert l'accès à la section critique, il le fait par l'intermédiaire d'une méthode requestAccess. Cette méthode effectue (dans une boucle while... ) un appel à compareAndSet sur isOccupied pour déterminer de manière atomique si la SC est occupée et, si elle ne l'est pas, la marquer comme occupée en placant le booléen à true
+    - Si la SC est occupée, le thread se met en attente sur le verrou partagé
+    - Si la SC n'est pas occupée, le thread appelant peut alors entrer en SC
+    - Un thread sortant de la SC place le booléen à false et réveille tous les threads attendant sur le verrou partagé
+
+On constatera qu'aucune politique n'est mise en place pour déterminer quel thread accèdera à la SC. Par conséquent l'accès est totalement aléatoire. Il est donc impossible de prouver la vivacité de cette algorithme (il est statistiquement peu probable qu'un thread requérant l'accès à la SC ne soit pas servi à long terme, mais rien ne le garanti).
+
+Une façon assez intuitive d'assurer qu'un thread appelant soit à terme servi est de mettre en place une file d'attente : un thread requérant l'accès à la SC se place en file d'attente et le prochain thread à accéder à la SC sera le thread en tête de file.
+Un thread en file d'attente doit évidemment se mettre en attente sur un verrou. Cependant il est évident que ce verrou ne pourra pas être partagé par tous les threads. En effet il est impossible de réveiller un thread précis par un appel à notify(). On devra donc associer à chaque thread un verrou unique. C'est ce verrou qui devra être récupéré par le thread sortant de la SC.
+Il apparait alors assez naturel, pour réaliser cette file d'attente, de placer le verrou unique d'un thread en attente dans une structure FIFO. Un thread sortant aura alors juste à extraire le verrou en tête de cette structure.
+
+L'implémentation de l'algorithme se trouve dans le fichier PriorityAlgorithm.java. Elle correspond à l'algorithme suivant :
+    - Chaque thread dispose d'un lock unique qui lui est associé
+    - On dispose d'une structure FIFO, thread-safe, capable de stocker des verrous
+    - Un thread requérant l'accès en SC appelle une méthode requestAccess()
+    - Cette méthode ajoute le verrou du thread appelant dans la structure FIFO, puis, tant que le verrou en tête de file n'est pas le verrou unique associé au thread appelant, le thread se met en attente sur son verrou.
+    - Un thread sortant de la SC extrait son propre verrou de la file (et uniquement au moment où il sort de la SC) et dans le même temps réveille les threads en attente sur le verrou en tête de la structure.
+
+PS : L'implémentation dans PriorityAlgorithm utilise un structure thread-safe fournie par Java pour implémenter la structure FIFO. Elle se passe donc d'AtomicBoolean.
+
+
+Exercice 2 Schéma producteur consommateur
+
+La première modification apportée a été de mettre les deux méthodes déposer et retirer en synchronized. Ceci revient globalement à 

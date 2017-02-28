@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="clinda">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/linda/clinda.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

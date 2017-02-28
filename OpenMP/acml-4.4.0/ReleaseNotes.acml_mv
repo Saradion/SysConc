@@ -1,0 +1,103 @@
+These are the Release Notes for the AMD Vector Math Library.
+
+Update 8, included in ACML 4.4.0 - February, 2010
+
+1. A bug in fastsincosf was resolved. Data corruption could occur when the
+input is a NaN.  This bug was first found in ACML 4.3.0, it was not present in
+ACML 4.2.0.
+
+Update 7, included in ACML 4.3.0 - June 10, 2009
+
+1. The 14 scalar math functions have been updated to improve computation
+speed and accuracy of results.
+
+Update 6, included in ACML 4.2.0 - November 10, 2008
+1. A bug was resolved in vrsapowf, Incorrect results were
+   returned when y=1.0.
+2. The __remainder_piby2 routine is renamed to __amd_remainder_piby2
+   to avoid naming conflicts with libm.
+
+Release 5 - June 23, 2006
+The following functions are added in this release:
+  log2 vrd2_log2 vrd4_log2 vrda_log2
+  fastlog2f vrs4_log2f vrs8_log2f vrsa_log2f
+  vrsa_powf vrsa_powxf
+
+Bug fixes:
+1. Added a check to just return if N=0 in all array routines.
+2. Added a .note.GNU-stack section to all linux routines to ensure
+   a non-executable stack (security fix).
+3. Added aliases in the Solaris version to support use of the scalar
+   fastmath routines when linked with Fortran programs.
+   These are added for exp, log, log10, pow, sin, cos, expf, logf,
+   log10f, powf, sinf, and cosf.
+   For example, the symbol __exp is aliased to fastexp.  This allows
+   Fortran statements such as y=exp(x), where x and y are REAL*8 to
+   use the fastexp routine.  Similarly, __expf is aliased to __fastexpf,
+   allowing the statement using REAL*4 to use the fastexpf routine.
+
+Release 4 - June 24, 2005
+The following functions are added in this release:
+  fastsinf vrs4_sinf vrsa_sinf
+  fastcosf vrs4_cosf vrsa_cosf
+  fastsincosf vrs4_sincosf vrsa_sincosf
+  fastlog10f vrs4_log10f vrs8_log10f vrsa_log10f
+  vrs4_powxf
+
+Bug fixes:
+1. Fixed a problem in vrs4powf. rbx was not being saved as required by
+the ABI.
+2. Fixed a problem in fastsincos. r8 and rdx were not saved properly
+across calls to remainder_piby2.
+
+
+Release 3 - April 14, 2005
+The following functions are added to the release:
+  log10 vrd2_log10 vrd4_log10 vrda_log10
+  fastpowf vrs4_powf
+
+In addition, this release adds an acml_mv.h header file for use
+with C and C++ programs. Three example files for C, C++, and fortran
+usages are added.
+
+Fortran interfaces were also added for the fast scalar and array
+routines.  Fortran interfaces are not supplied for the vector
+functions since the _m128 types are not supported by current AMD64
+Fortran compilers.  Examples of how to use the scalar and array
+routines in a Fortran program are found in testfortranif.f.
+
+All routines have been updated to be compatible with a shared object
+library build.  Shared object build and testing was added to the AMD
+internal validation suite.
+
+
+Bug fixes:
+1. All exp and expf routines would return the wrong value for very large
+positive and very large negative input values (not including infinity).
+Test cases were added to the AMD internal validation suite to test for
+these cases.
+
+2. Certain scalar routines were modified to prevent data in the upper
+halves of xmm registers from causing exceptions.  These routines use
+cvtpd2dq instructions, and NaNs in the upper half of the source register
+could set the invalid operand exception.
+
+Known issues:
+none.
+
+
+Release 2 - February 18, 2005
+The following functions are added to the release:
+fastlogf vrs4logf vrs8logf vrsalogf
+
+
+Release 1 - October 25, 2004
+This is the first release of the AMD Vector Math Library source.
+It includes the routines:
+  fastlog vrd2log vrd4log vrdalog
+  fastexp vrd2exp vrd4exp vrdaexp
+  fastsin vrd2sin vrd4sin vrdasin
+  fastcos vrd2cos vrd4cos vrdacos
+  fastsincos vrd2sincos vrdasincos
+  fastexpf vrs4expf vrs8expf vrsaexpf
+  fastpow

@@ -1,0 +1,644 @@
+
+ACML - Release Notes - version 4.4.0
+------------------------------------
+
+ACML Contents
+-------------
+ACML - the AMD Core Math Library - is a tuned math library designed for
+high performance on AMD64 machines, including Opteron(TM) and Athlon(TM) 64,
+and includes both 32-bit and 64-bit library versions. Different versions
+are available for Linux, Windows and Solaris operating systems.
+
+A full suite of Basic Linear Algebra (BLAS) routines is provided,
+and key BLAS routines have been tuned for high performance on AMD
+processors in both 32-bit and 64-bit modes.
+
+A full suite of Linear Algebra (LAPACK) routines is provided and
+takes advantage of the highly tuned BLAS for good performance.
+
+A comprehensive suite of Fast Fourier Transforms (FFTs) is provided,
+again with highly tuned code.
+
+A comprehensive suite of Random Number Generators (RNGs) is provided,
+again with highly tuned code.
+
+
+New Features
+------------
+New features of release 4.4.0 of ACML since version 4.3.0:
+
+(o) Performance of ZGEMM has been further improved. This performance
+    improvement carries through to other Level 3 BLAS and LAPACK routines.
+
+(o) Performance of both single and double precision real to complex FFTs
+    has been improved for AMD Family 10h processors.
+
+(o) A multithreaded (openmp) open64 compiler build of ACML has been introduced.
+
+(o) Performance of SSYRK has been improved.
+
+(o) Various minor bug fixes to LAPACK routines.
+
+(o) A bug which affected the Mersenne Twister RNGs was resolved.  
+    Register RBX was not properly saved in the assembly language kernel.
+
+
+New features of release 4.3.0 of ACML since version 4.2.0:
+
+(o) Performance of DGEMM and SGEMM has been further improved. This performance
+    improvement carries through to other Level 3 BLAS and LAPACK routines
+    that call DGEMM and SGEMM. This improvement is particularly significant
+    when ACML runs on 64-bit Intel hardware.
+
+(o) An experimental "fast memory allocation" scheme has been introduced
+    which may allow you to improve performance of the matrix-matrix multiply
+    routine DGEMM and any other routines (such as LAPACK) which make heavy
+    use of DGEMM. See section 2.11 of the ACML user guide for full details.
+
+(o) A bug which affected certain problem sizes in DGEMM and ZGEMM has
+    been fixed.
+
+(o) Level 1 BLAS routines have been re-tuned for newer hardware to
+    make better use of available cache memory and hence improve performance.
+    Routines affected include xDOT, xCOPY, xAXPY, and xSCAL routines.
+
+(o) Assembly language kernels used by the real-complex FFT routines
+    csfft, dzfft, scfft and zdfft have been re-tuned for newer hardware,
+    leading to performance improvements of between 20% and 40% for these
+    routines.
+
+(o) The 3D FFT expert driver routines cfft3dy and zfft3dy have been improved
+    to make use of a faster code path when possible (i.e. when the arguments
+    to the routines are such that memory use is contiguous).
+
+(o) An open64 compiler build of ACML has been introduced.
+
+(o) The documentation for the Fast Fourier Transform routine ZFFT2D
+    understated the required length of the communication array COMM
+    by 100 elements. Programs that supplied the old documented amount
+    may have crashed or returned incorrect results due to memory
+    overwrites. Users of ZFFT2D should check carefully against the
+    latest documentation and increase the size of COMM if necessary.
+    Documentation for other FFT routines (including CFFT2D) was correct.
+
+New features of release 4.2.0 of ACML since version 4.1.0:
+
+(o) DGEMM has been retuned, in particular for the benefit of smaller
+    problem sizes in 64-bit code. There is also improved performance for
+    other double precision level 3 BLAS and some double precision LAPACK
+    routines.
+
+(o) Various of the uniform random number (base) generators have been tuned
+    for better performance on 32-bit platforms. Work has been done
+    on the Mersenne Twister, the Wichmann-Hill and the NAG basic generators,
+    all of which help improve the higher level statistical distribution
+    functions which call them.
+
+(o) Work has been done to significantly improve the performance of the
+    3D complex FFT routines in ACML. At the same time, the workspace
+    memory requirements have been substantially reduced, making routine
+    cfft3d better able to deal with large problem sizes. See the
+    documentation of cfft3d in the ACML user guide for details of new
+    workspace requirements.
+
+New features of release 4.1.0 of ACML since version 4.0.1 include:
+
+(o) Further improvements in performance of double and single precision
+    real BLAS and LAPACK routines on AMD Family 10h (Barcelona) processors
+    in 64-bit libraries.
+
+(o) ZGEMM has been retuned for higher performance on both AMD K8 and AMD
+    Family 10h (Barcelona) processors in 64-bit libraries. This also
+    improves the performance of many other double precision complex BLAS
+    and LAPACK routines.
+
+(o) The ACML uniform random number generators, when asked to produce
+    numbers in the range 0.0 to 1.0, occasionally produced numbers
+    inconsistent with the documented expected return values.
+    In particular, the expected occurrence or non-occurrence of
+    the end-of-range values 0.0 and 1.0 was not consistent with
+    documentation. At ACML 4.1.0 code and documentation has been
+    harmonized, and the base generators should all return values
+    in the semi-open interval (0.0,1.0].
+
+(o) Support for Absoft Fortran compilers under Linux via the gfortran
+    builds of ACML has been documented (see the ACML User Guide).
+
+(o) Support for the older GNU g77 compiler has been removed.
+
+New features of release 4.0.1 of ACML since version 4.0.0 include:
+
+(o) A memory overwrite bug in DGEMM and SGEMM was introduced at
+    ACML 3.7.0 and occasionally (but rarely) led to incorrect
+    results. This bug, which only affected 64-bit versions of ACML,
+    has been fixed.
+
+New features of release 4.0.0 of ACML since version 3.7.0 include:
+
+(o) Support for AMD Family 10h (Barcelona) processors. Double and
+    single precision BLAS and LAPACK routines have been retuned
+    for optimum performance on Barcelona.
+
+(o) ACML has been upgraded to comply with the latest version of
+    standard LAPACK routines (version 3.1.1). All routines new at
+    LAPACK 3.1.1 have been included, and all LAPACK 3.1.1 bug fixes
+    and enhancements have been applied.
+
+(o) A bug in the ACML version of LAPACK routine DGEBRD which was
+    introduced at ACML 3.6.0, and which affected certain problem
+    sizes, has been fixed.
+
+(o) ACML 4.0.0 is only available in 64-bit implementations, with
+    PGI, PathScale, gfortran and Intel compilers (under Linux) and
+    with PGI and Intel compilers (under Microsoft Windows).
+
+New features of release 3.7.0 of ACML since version 3.6.0 include:
+
+(o) 3.7.0 features pre-launch AMD Family 10h support. Only certain
+    ACML builds are available. The DGEMM and CFFT 1D routines have
+    been updated for optimum performance on the upcoming Barcelona
+    processors.
+
+New features of release 3.6.2 of ACML since version 3.6.1 include:
+
+(o) 3.6.2 is only available for the Intel FORTRAN builds. 3.6.2
+    is compiled with an Intel FORTRAN flag that allows correct
+    propagation of NaNs in situations where the FORTRAN source code is
+    comparing a floating point value to zero.
+    For the Windows builds, the flag is /Qprec, and for Linux it is /mp1.
+
+New features of release 3.6.1 of ACML since version 3.6.0 include:
+
+(o) 3.6.1 is only available for the Linux GFORTRAN builds.  The new
+    version uses updated compilers for both scalar and OpenMP builds.
+    The scalar build uses the released 4.1.2 GCC/GFORTRAN.  The OpenMP
+    build uses the 2007-03-16 4.2 GFORTRAN build available from the 
+    www.gfortran.org download pages.   The OpenMP build fixes the 
+    segfault issue that happens when using the 3.6.0 GFORTRAN OpenMP
+    library with newer 4.2 compilers.
+
+New features of release 3.6.0 of ACML since version 3.5.0 include:
+
+(o) Many LAPACK routines have been newly parallelized with OpenMP to
+    take better advantage of multi-processor or multi-core hardware.
+    The lists below mention double precision and double complex routines
+    only. All equivalent single precision and single complex routines
+    are also parallelized except where mentioned.
+
+    Newly parallelized routines at this release include:
+      Banded LU factorization and solver routines xGBTRF xGBTRS
+
+      Packed Cholesky solvers
+        DPPTRS ZPPTRS
+
+      Banded Cholesky solvers
+        DPBTRS ZPBTRS
+
+      Iterative refinement and error bounds for various factorizations
+      and storage formats:
+        DGERFS ZGERFS DGBRFS ZGBRFS DGTRFS ZGTRFS DPORFS ZPORFS DPPRFS
+        ZPPRFS DPBRFS ZPBRFS DPTRFS ZPTRFS DSYRFS ZHERFS ZSYRFS DSPRFS
+        ZHPRFS ZSPRFS DTRRFS ZTRRFS DTPTRS DTPRFS ZTPTRS ZTPRFS DTBTRS
+        DTBRFS ZTBTRS ZTBRFS
+
+      Various form Q/apply Q routines
+        DORGQR ZUNGQR DORGTR ZUNGTR DOPGTR ZUPGTR
+
+      Reduction to tri-diagonal form
+        DSYTRD ZHETRD (but not SSYTRD)
+
+      Reduction from banded to tri-diagonal form
+        DSBTRD ZHBTRD
+
+      Symmetric eigenvalues (Bi-section algorithm)
+        DSTEBZ
+
+      Reduction to bi-diagonal form
+        DGEBRD ZGEBRD
+
+      Unsymmetric eigenproblems
+        DHSEIN ZHSEIN
+
+      Generalized eigenproblems, packed storage
+        DSPGV DSPGVX DSPGVD ZHPGV ZHPGVX ZHPGVD 
+
+    Note that the following routines were parallelized at earlier
+    releases of ACML:
+
+      LU factorization and solver
+        DGETRF DGETRS ZGETRF ZGETRS
+
+      Cholesky factorization and solver
+        DPOTRF DPOTRS ZPOTRF ZPOTRS
+
+      QR Factorization
+        DGEQRF ZGEQRF
+
+      Symmetric eigenproblem (QR algorithm)
+        DSTEQR ZSTEQR
+
+      SVD (QR algorithm)
+        DBDSQR ZBDSQR
+
+(o) Under 32-bit Windows operating systems, a new PGI Visual Fortran
+    compiler version of ACML now replaces the old Unix-like 32-bit
+    PGI compiler build. This brings the 32-bit Windows PGI version
+    of ACML into line with the 64-bit Windows PGI build.
+
+(o) ACML now supports use of the Intel ifort compiler under both
+    Linux and Windows.
+
+(o) OpenMP versions of ACML now include "_mp" as part of the library
+    name (e.g. libacml_mp.so instead of libacml.so) to make it easier
+    to link to the appropriate version and avoid internal soname clashes.
+
+(o) A bug in the parameter checking for FFT routines cfft2dx and zfft2dx
+    which returned an incorrect error code has been fixed. Also, an error
+    in the documented workspace requirements for cfft2dx and zfft2dx has
+    been fixed.  
+
+New features of release 3.5.0 of ACML since version 3.1.0 include:
+
+(o) Many level 1 BLAS routines are now able to take advantage of
+    SSE3 instructions for extra performance on processors equipped
+    with them (including recent revision AMD Opteron and Athlon64
+    processors). Routines affected include xDOT, xCOPY, xAXPY, and
+    xSCAL routines.
+
+(o) Two new expert interfaces for 3D FFTs have been added at this
+    release. These have the names CFFT3DY and ZFFT3DY and are in
+    addition to the previously available expert interfaces CFFT3DX and
+    ZFFT3DX.
+
+    The new interfaces allow for greater flexibility in the storage of
+    input and output data within supplied arrays through the setting
+    of increment arguments. In particular, data held in submatrices of
+    a notional 3-dimensional array can be transformed.  The interfaces
+    CFFT3DY and ZFFT3DY do not contain the LTRANS parameter available
+    in CFFT3DX and ZFFT3DX since the restrictions on increments
+    required to return un-transposed data would be equivalent to using
+    the CFFT3DX and ZFFT3DX routines.
+
+    In summary, if the 3D data to be transformed (and the subsequent
+    transformed data) are stored contiguously then the routines
+    CFFT3DX or ZFFT3DX can be called with the possibility of not
+    performing a final transpose; on the other hand, for data
+    (original or transformed) not stored contiguously, the routines
+    CFFT3DY or ZFFT3DY should be called with increment arguments
+    describing the data storage arrangement.
+
+(o) ACML now comes with a small set of "performance example" programs
+    designed to demonstrate how fast a selection of ACML routines
+    run on your machine; see the ACML User Guide for details.
+
+(o) Versions of ACML compiled with gfortran and using OpenMP are
+    now available for use on SMP machines.
+
+(o) All versions of ACML built with PGI compilers are now compiled
+    with the -Mlarge_arrays flag to allow access to large data arrays.
+    The special large_arrays variants are therefore no longer needed
+    and have been withdrawn.
+
+(o) Versions of ACML for older 32-bit processors without SSE/SSE2
+    instructions are no longer produced.
+
+(o) A bug in LAPACK auxiliary routines SLAED6 and DLAED6 which caused
+    LAPACK eigensystem routines CSTEDC, DSTEDC, SSTEDC and ZSTEDC to
+    return inorrect results has been fixed.
+
+(o) A bug which caused FFT routine ZFFT1D to return incorrect results
+    when working on problem sizes which were very large powers of
+    7 or 11 has been fixed.
+
+(o) Calls of FFT routines in the degenerate cases where all problem
+    dimensions are equal to 1 were omitting to multiply by the
+    scaling factor. This has been corrected.
+
+(o) A bug which caused the random number routines DRANDDISCRETEUNIFORM
+    and SRANDDISCRETEUNIFORM sometimes to return integer values in
+    the range [A,B+1] instead of [A,B] has been fixed.
+
+(o) Errors in documentation of the use of the array COMM in some FFT
+    routines have been fixed. Errors in documentation of the size of
+    the array STATE in some random number routines have been fixed.
+
+New features of release 3.1.0 of ACML since version 3.0.0 include:
+
+(o) Most of the random number generators introduced into ACML
+    at version 3.0.0 have been tuned in order to significantly
+    improve performance of all 64-bit versions of ACML.
+
+(o) Variants of ACML using 64-bit integer arguments
+
+New features of release 3.0.0 of ACML since version 2.7.0 include:
+
+(o) A new suite of random number generator routines, including
+    a variety of base-level uniform generators as well as higher
+    level statistical distribution routines. At this release of
+    ACML, these routines have not been highly tuned for performance,
+    but tuning will be performed for future ACML versions.
+
+(o) ACML now supports the GNU gfortran compiler, important for users
+    on operating systems where the older g77 compiler is no longer
+    installed. Note that initial tests indicate that the gfortran
+    version of ACML is not always so efficient as the g77 version.
+    At the moment, if you have the option to choose either of the GNU
+    compiler versions, and you are keen for highest performance, we
+    recommend the g77 version. Naturally, this situation may change
+    in future versions of ACML as the gfortran compiler matures.
+
+New features of release 2.7.0 of ACML since version 2.6.0 include:
+
+(o) Most ACML FFT routines now allow the user to generate an optimal
+    plan to get best performance for a particular problem size,
+    benefitting repeated FFT computations with the same size.
+    Two expert driver FFT routines (namely cfft3dx and zfft3dx)
+    needed slightly revised interfaces to allow this improvement.
+    For more information see the FFT documentation in the ACML
+    User Guide.
+
+(o) A bug which caused program crashes when calling some ACML
+    BLAS routines with extremely large data arrays has been fixed.
+
+(o) 64-bit versions of ACML now include an expanded set of
+    fast/vector math library functions.
+
+(o) A 32-bit Windows ACML implementation using the __cdecl calling
+    convention now exists, to complement the _stdcall version.
+
+(o) 64-bit PGI versions of ACML now include variants compiled
+    with the -Mlarge_arrays flag, which allows them to be called
+    with larger data arrays than previously.
+
+New features of release 2.6.0 of ACML since version 2.5.3 include:
+
+(o) ACML has been tested and found to perform well on new AMD
+    dual core chips, which allow users to take advantage of
+    superior performance of OpenMP ACML versions even on a single
+    processor machine.
+
+(o) Further tuning improvements to some level 3 BLAS in 64-bit
+    ACML versions, with improvements propagated to LAPACK routines.
+
+(o) Under Linux, variant compiler versions of ACML can now be
+    downloaded and installed independently.
+
+New features of release 2.5.3 of ACML since version 2.1.0 include:
+
+(o) A routine ILAENVSET, which allows the user some control of
+    block sizes used by ACML LAPACK routines, has been added. See
+    ACML documentation for details.
+
+(o) New expert drivers for complex-complex FFT routines which
+    allow greater control over data storage and scaling (names of
+    expert driver routines end in the letter x).
+
+(o) The PGI SMP 64-bit and 32-bit variants of ACML now have
+    SMP-parallelized code for 2D, 3D and multiple 1D FFTs,
+    in all supported data formats. Performance of these routines
+    is now vastly improved when run on a multi-processor machine.
+
+(o) SMP support has been added to various key level 2 and level 3 BLAS
+    routines, thus improving performance of all other ACML routines
+    that depend on them (such as LAPACK routines), when run on a
+    multi-processor SMP machine.
+
+(o) 64-bit versions of ACML now come with a companion library of
+    fast/vector math library functions.
+
+(o) A bug in FFT routine ZFFT1MX, where the user-supplied scale factor
+    was not applied to a transform of length N=1, has been fixed.
+
+(o) A bug in OpenMP versions of ACML which affected level 3 BLAS
+    routines xGEMM, xDTRSM, xDTRMM, xSYMM and xHEMM, and in some
+    circumstances could cause a segmentation violation, has been fixed.
+
+New features added to release 2.1.0 of ACML since version 2.0.1 include:
+
+(o) The performance of DGEMM in the 64-bit libraries for small matrices
+    has been significantly increased.
+
+(o) Further enhancements have been made to the performance of FFT routines
+    in both the 64-bit and 32-bit versions of ACML. In the 64-bit version,
+    FFTs on sequences having a length containing prime factors of 7, 11 or
+    13 are significantly faster; for sequence lengths containing prime
+    factors greater than 13, the FFT routines also show performance gains.
+    In the 32-bit ACML version, single precision FFT routines on sequences
+    of lengths with prime factors 2 and/or 3 have significantly improved in
+    performance, while those with lengths containing larger prime factors
+    also show performance gains.
+
+(o) Routines that were not safe for use by multi-threaded programs in
+    some earlier releases of ACML have now been made thread safe.
+    If you use ACML in a multi-threaded environment you are recommended
+    not to use versions of ACML earlier than 2.1.0. (Note that this
+    does not apply to the PGI-compiled SMP versions of ACML which have
+    always been safe for use in OpenMP programs.)
+
+New features added to release 2.0.1 of ACML since version 1.5 include:
+
+(o) A revised blocking mechanism in 64-bit versions of ACML kernel
+    BLAS routines has been implemented to produce performance-enhancing
+    improvements. Peak speeds of routines like DGEMM, DSYMM, DTRMM and
+    their single precision equivalents show significant improvements over
+    earlier versions of ACML. These improvements naturally carry over
+    to LAPACK routines which make extensive use of such BLAS.
+
+(o) More highly tuned kernels have been added to 64-bit versions
+    of ACML FFT routines. At earlier versions of ACML, highly tuned kernels
+    only applied to FFT problem sizes which were a power of 2. Now problem
+    sizes which have factors of 3, 5, 7, 11 and 13 have been tuned,
+    leading to performance enhancements of up to more than a hundred percent
+    in some cases.
+
+(o) For user convenience, the data output from the FFT routines ZDFFT/CSFFT
+    and ZDFFTM/CSFFTM have been rescaled by a factor 2. This ensures that
+    the result of transforming real data using DZFFT/SCFFT and the subsequent
+    transforming back to real data using ZDFFT/CSFFT, has the same scaling
+    as the original data. See the example programs dzfft_example.f and
+    dzfft_c_example.c on how to recover original real data from these
+    transforms.
+
+New features added to release 1.5 of ACML include:
+
+(o) 28 key LAPACK routines, including linear equation solvers,
+    singular value decomposition and symmetric eigensolvers, have been
+    upgraded to obtain significant speedup running on multiprocessor
+    (SMP) machines when using PGI's OpenMP compliant compilers.
+
+(o) Significant performance improvements have been made to a set of kernel
+    BLAS routines in the 32-bit versions of ACML which were not highly tuned
+    in ACML 1.0. These improvements have beneficial effects for a large
+    number of other 32-bit routines which depend on them.
+
+(o) ACML now contains Level 1 BLAS routines for operations involving
+    sparse vectors.
+
+(o) All ACML routines now come with C as well as FORTRAN interfaces. The
+    new interfaces allow the C programmer to pass arguments in a more
+    natural way (for example, pass input scalar arguments by value instead of
+    by reference), and dispense with the need for user-supplied workspace
+    arguments.
+
+(o) 32-bit ACML libraries now come in versions that will run
+    on older processors which do not have the complete set of
+    Streaming SIMD Extension (SSE) instructions.
+
+
+Applicability
+-------------
+Different ACML versions are provided for use with the GNU compilers
+gfortran/gcc, with the PGI compilers pgf77/pgf90/pgcc, with the
+open64 compilers openf95/opencc, with the Intel ifort compiler, with
+the NAG f95 Fortran compiler, and with the Sun f95/cc compilers.
+
+Note that from ACML 3.5.0, versions of ACML specific to older 32-bit
+processors which do not support SSE/SSE2 (Streaming SIMD Extensions)
+instructions are no longer produced. All versions of ACML described below
+are for machines which do have SSE and SSE2 instructions. This means they
+are suitable for use on all AMD 64-bit chips and newer 32-bit chips.
+Users wishing to use ACML on such machines should continue to use older
+(pre-3.5.0) versions of ACML.
+
+
+Installation material
+---------------------
+Under Linux/Solaris, ACML is by default installed in the directory
+/opt/acml4.4.0. Under 32-bit and 64-bit Windows, ACML is by default
+installed in the directory C:\AMD\acml4.4.0. In all cases the
+following subdirectories are used for 64-bit builds:
+
+  acml4.4.0/Doc
+  acml4.4.0/util
+
+plus, for the Linux PGI 64-bit compiler version of ACML:
+
+  acml4.4.0/pgi64
+  acml4.4.0/pgi64_mp
+
+plus, for the Windows PGI 64-bit compiler version of ACML:
+
+  acml4.4.0/win64
+  acml4.4.0/win64_mp
+
+plus, for the GNU gfortran 64-bit compiler version of ACML:
+
+  acml4.4.0/gfortran64
+  acml4.4.0/gfortran64_mp
+
+plus, for the open64 64-bit compiler version of ACML:
+
+  acml4.4.0/open64_64
+  acml4.4.0/open64_64_mp
+
+plus, for the Linux or Windows Intel 64-bit compiler version of ACML:
+
+  acml4.4.0/ifort64
+  acml4.4.0/ifort64_mp
+
+plus, for the Sun 64-bit compiler version of ACML:
+
+  acml4.4.0/sun64
+  acml4.4.0/sun64_mp
+
+Any 32-bit ACML builds will appear in similarly named directories, for example
+
+  acml4.4.0/gfortran32
+  acml4.4.0/gfortran32_mp
+
+Any or all of the different compiler variants of ACML can coexist
+in the same install location.
+
+ACML documentation is available in html, pdf, info and plain text
+format in the following files:
+
+  Doc/html/index.html
+  Doc/acml.pdf
+  Doc/acml.info
+  Doc/acml.txt
+
+Under Linux, the installation directories contain both static and shared
+versions of ACML. For scalar versions of ACML, the static and shared
+libraries will be named libacml.a and libacml.so respectively. For
+multi-threaded versions of ACML, the static and shared libraries will
+be named libacml_mp.a and libacml_mp.so respectively.
+
+Under Windows, the installation directories contain both static and DLL
+versions of ACML. For scalar versions of ACML, the static library
+will be named libacml.lib; the DLL library will be named libacml_dll.dll,
+and have an associated import library named libacml_dll.lib.
+For multi-threaded versions of ACML, the static library will be named
+libacml_mp.lib; the DLL library will be named libacml_mp_dll.dll,
+and have an associated import library named libacml_mp_dll.lib.
+
+In all cases, you should be careful to link to the library appropriate
+to your hardware and operating system. If you link to a library that
+uses SSE or SSE2 instructions when your processor does not support them,
+you may get "illegal instruction" or other errors when you run your program.
+
+The ACML installation directory "util" contains a program named cpuid.exe
+which can tell you whether or not your processor supports SSE or SSE2
+instructions. In addition, under Linux, you may be able to determine
+whether or not your processor supports SSE or SSE2 instructions by
+examining the special file /proc/cpuinfo. In the section named "flags",
+look for the appearance of "sse" and "sse2"; if the flags don't appear,
+your processor doesn't have them.
+
+
+Using the ACML Libraries
+------------------------
+For detailed information on how to link with the libraries, see documentation
+(particularly the ACML User Guide, acml.pdf) in the acml4.4.0/Doc directory.
+To verify exactly the version of ACML, and which compiler versions and flags
+were used to build it, note that the routine acmlinfo() can be called.
+For the Windows versions of ACML, see also the batch scripts
+acmlexample.bat and acmlallexamples.bat in the examples directories.
+
+
+Required runtime libraries under Microsoft Windows
+--------------------------------------------------
+ACML versions 4.2.0 and later link with the standard runtime library
+provided by the Microsoft Visual Studio 2008 compilers. This requires
+that the machine ACML runs on either has VS2K8 installed (or the Windows
+SDK for Windows Server 2008), or the runtime libraries can be separately
+downloaded from the appropriate Microsoft platform links provided below:
+
+Visual Studio 2K8 Redist:
+
+x86
+<http://www.microsoft.com/downloads/details.aspx?FamilyID=9B2DA534-3E03-4391-8A4D-074B9F2BC1BF&displaylang=en>
+
+x64
+<http://www.microsoft.com/downloads/details.aspx?familyid=BD2A6171-E2D6-4230-B809-9A8D7548C1B6&displaylang=en>
+
+
+Recommendation for Windows Vista users with AMD's Family 0x10 processors
+------------------------------------------------------------------------
+(Barcelona, Shanghai cores)
+---------------------------
+A performance loss has been seen in cpu bound single-threaded apps on
+Windows Vista OS's.  An unfavorable interaction between Vista's
+threading policy and AMD's Family 0x10 processors ability to throttle
+clock speeds on a core-by-core basis results in degraded performance.
+Single-threaded apps on Vista tend to rotate around all available cores
+before an individual core fully powers up from a throttled state.  Linux
+and XP builds of Windows have not shown this behavior, and
+fully-threaded apps where the number of threads is equal or greater than
+the number of available cores will keep all the cores busy at their
+unthrottled state.
+
+Several solutions exist for users who may be affected by this
+interaction.  Users may isolate the affinity of their threads to
+individual cores to avoid the wandering of their threads.  This is the
+most power efficient option as unused cores will stay throttled; this
+can be achieved either programmatically or through tools such as Process
+Explorer.  An easier solution is to go into the 'Power Options' pane of
+the vista control panel, and change the machine from 'Balanced mode' to
+'High Performance' mode; this stops Vista from throttling the cores.
+Lastly, in BIOS, the user can turn off 'Cool'n'Quiet' to stop the
+processor itself from throttling.
+
+Bug Reports
+-----------
+Bugs should be reported to tech.support@amd.com with the string
+"ACML-Support" in the subject line.

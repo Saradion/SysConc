@@ -1,0 +1,6 @@
+- Add kill method for client
+- Add binding method for server (to bind it to a specific port/specific name)
+- Add method to change the server URI registered in the client
+- Add a way to internally assign a unique name to a client (so that you don't have to explicitely set it)
+- DOCUMENT THE WHOLE FUCKING THING!!!!!!!!!
+- Implement multi-activity Linda...

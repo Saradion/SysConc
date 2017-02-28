@@ -1,0 +1,10 @@
+ACML version 4.4.0
+------------------
+
+To install the 64-bit Linux versions of ACML, use the install scripts.
+e.g. ./install-acml-4-4-0-gnu-64bit.sh
+        installs the 64-bit GNU compiler versions of ACML;
+     ./install-acml-4-4-0-pgi-64bit.sh
+        installs the 64-bit PGI compiler versions of ACML;
+     ./install-acml-4-4-0-open64-64bit.sh
+        installs the 64-bit Open64 versions of ACML.

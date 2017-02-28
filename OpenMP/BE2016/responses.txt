@@ -1,0 +1,99 @@
+In this file you have to write the answers to the questions marked
+with the "pencil" symbol that you will find in the subjects of the
+various exam parts.
+
+
+=======================================================================
+Part 1: Derivative-free minimization
+
+Non-conclusive : while the algorithm I wrote "works", in the sense that it produces a correct result, it does so at a slower speed than the sequential algorithm.
+
+
+
+
+=======================================================================
+Part 2: Linked list
+
+Execution time with 1 thread :
+Sequential      time    :   500.59 msec.       -- result: 50005001
+Parallel for time       :   502.04 msec.       -- result: 50005001
+Parallel task   time    :   502.14 msec.       -- result: 50005001
+
+
+Execution time with 2 threads :
+Sequential      time    :   500.81 msec.       -- result: 50005001
+Parallel for time       :   251.88 msec.       -- result: 50005001
+Parallel task   time    :   250.66 msec.       -- result: 50005001
+
+
+Execution time with 4 threads :
+Sequential      time    :   500.54 msec.       -- result: 50005001
+Parallel for time       :   135.04 msec.       -- result: 50005001
+Parallel task   time    :   126.14 msec.       -- result: 50005001
+
+We can observe that both version are roughly equivalent, but the task implementation seems to be slightly more efficient at a higher thread count.
+
+My interpretation of this fact is that our implementation stops a task whenever a thread enters the critical section. During this period, the threads whose task got stopped is free to begin a new task. While this difference isn't really noticeable at low thread count, at higher thread count this gets much more important : while one thread enters a critical section, every other thread start computing new tasks.
+
+
+
+=======================================================================
+Part 3: Matrix Multiplication
+
+Not completed
+
+
+=======================================================================
+Part 4: Reduction
+
+The provided algorithm isn't parallelizable as-is, because each iteration of the for loop requires completion of previous iterations in order to complete succesfully.
+
+However, since the operator is associative, I implemented a version that applies the operator to each couple (x[i], x[i+1]) of an array, with i going 2-by-2 from 0 to array_size. This effectively produces an array of results half the size of the previous one, with every operation independent from each other and thus parallelizable.
+We then recursively call the function until we get an array of size 1, which holds the result.
+
+The following results were computed with array_size = 1024
+Execution time with 1 thread :
+Sequential time : 10230.13 msec.  ---  Result: 523809
+Parallel   time : 10230.16 msec.  ---  Result: 523809
+
+
+Execution time with 2 threads :
+Sequential time : 10233.02 msec.  ---  Result: 523809
+Parallel   time :  5120.16 msec.  ---  Result: 523809
+
+Execution time with 4 threads :
+Sequential time : 10230.21 msec.  ---  Result: 523809
+Parallel   time :  2586.53 msec.  ---  Result: 523809
+
+As we can see, the speedup in this case is almost linear.
+
+NB : The choice of array_size is important... Because while the idea behind the algorithm seemed fine, I utterly messed up the implementation and produced an algorithm that gave correct results only for array_sizes for which there exist n so that array_size = 2^n.
+
+
+=======================================================================
+Part 5: Synchronizations
+
+Note : I did not manage to implement a working version of the locks.
+
+
+Execution time with 1 thread :
+Sequential   time :  1010.66 msec.       -- result: 1000000
+Critical     time :  1010.51 msec.       -- result: 1000000
+Atomic       time :  1008.99 msec.       -- result: 1000000
+Locks        time :  1011.24 msec.       -- result: 1000000
+
+Execution time with 2 threads :
+Sequential   time :  1043.49 msec.       -- result: 1000000
+Critical     time :   546.92 msec.       -- result: 1000000
+Atomic       time :   506.19 msec.       -- result: 1000000
+Locks        time :  1081.30 msec.       -- result: 1000000
+
+
+Execution time with 4 threads :
+Sequential   time :  1008.22 msec.       -- result: 1000000
+Critical     time :   301.04 msec.       -- result: 1000000
+Atomic       time :   365.08 msec.       -- result: 1000000
+Locks        time :  1032.48 msec.       -- result: 1000000
+
+It seems that both of the correct parallel implementation are roughly equivalent.
+The implementation using Criticals seems slightly faster with 4 threads, but I could fine an explanation for this marginal increase in speed (nor can I explain why the situation seems to be reversed with 2 threads...)
